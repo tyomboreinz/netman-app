@@ -1,0 +1,35 @@
+{% extends  'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-medal icon-gradient bg-tempting-azure"></i>
+            </div>
+            <div>
+                {{ title }}
+                <div class="page-title-subheading">{{ subtitle }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="main-card mb-3 card">
+    <div class="card-body">
+        {% for message in messages %}
+            {% if message %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endif %}
+        {% endfor %}
+        <form action="" method="post" enctype="multipart/form-data" class="form-horizontal form-material mx-2">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-success mx-auto mx-md-0 text-white">
+                Add
+            </button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

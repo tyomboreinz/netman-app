@@ -1,0 +1,64 @@
+{% extends  'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-pen icon-gradient bg-mean-fruit"></i>
+            </div>
+            <div>{{domain}}
+                <div class="page-title-subheading">Subdomain List</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="main-card mb-3 card">
+            <div class="card-header">List SubDomain
+                <div class="btn-actions-pane-right">
+                    <a href="{% url 'subdomain_add' %}">
+                        <button class="btn btn-success mx-auto mx-md-0 text-white">Add SubDomain</button>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <!-- <th class="text-center">Type</th> -->
+                        <th class="text-center">Domain</th>
+                        <th class="text-center">IP</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for subdomain in subdomain_list %}
+                    <tr>
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <!-- <td class="text-center">{{ subdomain.type }}</td> -->
+                        <td class="text-center">{{ subdomain.name }}</td>
+                        <td class="text-center">{{ subdomain.ip }}</td>
+                        <td class="text-center">{{ subdomain.description }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'subdomain_edit' subdomain.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-subdomain-{{ subdomain.id }}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-block text-center card-footer">
+                <!-- <a href="{% url 'domain_apply' domain.id %}" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#domain-config-appy">Apply Domain</a> -->
+                <a href="{% url 'domain_apply' domain.id %}" class="btn btn-warning btn-sm">Apply Domain</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends  'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-pen icon-gradient bg-mean-fruit"></i>
+            </div>
+            <div>Applications List
+                <div class="page-title-subheading">app</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="main-card mb-3 card">
+            <div class="card-header">List Applications
+                <div class="btn-actions-pane-right">
+                    <a href="{% url 'app_add' %}">
+                        <button class="btn btn-success mx-auto mx-md-0 text-white">Add App</button>
+                    </a>
+                    <a href="{% url 'home' %}" target="_blank">
+                        <button class="btn btn-success mx-auto mx-md-0 text-white">Go to Portal</button>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Image</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">IP</th>
+                        <th class="text-center">Domain</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for app in app_list %}
+                    <tr>
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td class="text-center"><img src="{{ app.image.url }}" height="60px"></td>
+                        <td class="text-center">{{ app.name }}</td>
+                        <td class="text-center"><a href="{{app.protocol}}://{{ app.ip }}:{{ app.port }}" target="_blank">{{app.protocol}}://{{ app.ip }}:{{ app.port }}</a></td>
+                        <td class="text-center"><a href="{{app.protocol}}://{{ app.domain }}" target="_blank">{{app.protocol}}://{{ app.domain }}</a></td>
+                        <td class="text-center">{{ app.description }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'app_edit' app.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-app-{{ app.id }}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends  'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-pen icon-gradient bg-mean-fruit"></i>
+            </div>
+            <div>Domain List
+                <div class="page-title-subheading">Domain</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="main-card mb-3 card">
+            <div class="card-header">List Domain
+                <div class="btn-actions-pane-right">
+                    <a href="{% url 'domain_add' %}">
+                        <button class="btn btn-success mx-auto mx-md-0 text-white">Add Domain</button>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Domain</th>
+                        <th class="text-center">IP</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for domain in domain_list %}
+                    <tr>
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td class="text-center">{{ domain.name }}</td>
+                        <td class="text-center">{{ domain.ip }}</td>
+                        <td class="text-center">{{ domain.description }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'domain_edit' domain.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-domain-{{ domain.id }}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

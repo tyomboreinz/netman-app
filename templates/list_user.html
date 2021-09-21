@@ -1,0 +1,79 @@
+{% extends  'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-user icon-gradient bg-mean-fruit"></i>
+            </div>
+            <div>User List
+                <div class="page-title-subheading">User</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="main-card mb-3 card">
+            <div class="card-header">List User
+                <div class="btn-actions-pane-right">
+                    <a href="{% url 'signup' %}">
+                        <button class="btn btn-success mx-auto mx-md-0 text-white">Add User</button>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">Username</th>
+                        <th class="text-center">Status</th>
+                        <th class="text-center">Last Login</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for user_l in list_user %}
+                        {% if forloop.first %}
+                            <tr>
+                                <td class="text-center">{{ user.username }}</td>
+                                <td class="text-center">
+                                    {% if user.is_staff == True %}
+                                        Admin
+                                    {% else %}
+                                        User
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">{{ user.last_login }}</td>
+                                <td class="text-center">---</td>
+                            </tr>
+                        {% endif %}
+                    <tr>
+                        <td class="text-center">{{ user_l.username }}</td>
+                        <td class="text-center">
+                            {% if user_l.is_staff == True %}
+                                Admin
+                            {% else %}
+                                User
+                            {% endif %}
+                        </td>
+                        <td class="text-center">{{ user_l.last_login }}</td>
+                        <td class="text-center">
+                            {% if user.is_staff == True %}
+                                <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-user-{{ user_l.username }}">Delete</a>
+                            {% else %}
+                                Not Allowed
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
