@@ -1,5 +1,6 @@
 from django.db.models.aggregates import Count
 from django.contrib.auth.models import User
+from django.db.models.fields import NullBooleanField
 from ipam.network import Network
 from django.shortcuts import render, redirect
 from django.db.models.functions import Length
@@ -126,6 +127,7 @@ def application_add(request):
         if form.is_valid():
             form.save()
             return redirect('applications')
+        
     else:
         form = FormApplication()
         data = {
@@ -277,7 +279,7 @@ def network_scan(request, id_subnet):
             Ip_address.objects.create(ip_address=str(ip),subnet_id=id_subnet)
             print("IP : "+ ip +" Addedd Successfully")
         else:
-            print("IP : "+ ip +" Already Available")
+            print("IP : "+ ip +" Already Exist")
         
     return redirect('/network/'+ str(id_subnet))
 

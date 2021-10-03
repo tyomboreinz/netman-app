@@ -11,7 +11,7 @@ class Subnet(models.Model):
     ip_network = models.CharField(max_length=15)
     netmask = models.CharField(max_length=15)
     ip_broadcast = models.CharField(max_length=15)
-    description = models.TextField()
+    description = models.TextField(null=True)
 
     def __str__(self):
         return self.ip_network
@@ -19,7 +19,7 @@ class Subnet(models.Model):
 class Ip_address(models.Model):
     ip_address = models.CharField(max_length=15)
     hostname = models.CharField(max_length=25)
-    description = models.TextField()
+    description = models.TextField(null=True)
     subnet = models.ForeignKey(Subnet, on_delete=models.CASCADE)
     username = models.CharField(max_length=15)
     password = models.CharField(max_length=15)
@@ -41,7 +41,7 @@ class Application(models.Model):
     ip = models.ForeignKey(Ip_address, on_delete=models.CASCADE)
     port = models.IntegerField()
     domain = models.CharField(max_length=50, null=True)
-    description = models.TextField()
+    description = models.TextField(null=True)
     image = models.ImageField(upload_to='app/', null=True)
     create_at = models.DateTimeField(auto_now_add=True)
 

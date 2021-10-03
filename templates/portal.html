@@ -33,7 +33,7 @@
       <div class="container" style="width: 100%;padding:10px;padding-left: 20px;padding-right: 20px;">
         <div class="row">
           {% for app in app_list %}
-          <div class='col-lg-15 col-sm-4 col-xs-6 col-box' id='{{app.protocol}}://{{ app.ip }}:{{ app.port }}' onclick='get(this.id)' style='padding-left: 8px;padding-right: 8px;padding-bottom: 8px; padding-top: 8px;'>
+          <div class='col-lg-15 col-sm-4 col-xs-6 col-box' id='{{app.protocol}}://{% if app.domain %}{{app.domain}}{%else%}{{ app.ip }}:{{ app.port }}{%endif%}' onclick='get(this.id)' style='padding-left: 8px;padding-right: 8px;padding-bottom: 8px; padding-top: 8px;'>
             <div class='small-box bg-green' style='margin-bottom: 0px;'>
               <div class='inner'>
                 <div class='logo'>
@@ -45,7 +45,7 @@
                   </hr>
                   <span class='sub-text'>{{ app.description }}</span>
                 </div>
-                <div class='clearfix'></div>
+                <!-- <div class='clearfix'></div> -->
               </div>
             </div>
           </div>

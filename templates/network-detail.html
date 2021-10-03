@@ -17,13 +17,19 @@
                 </div>
             </div>
         </div>
+        <div class="page-title-actions">
+            <div class="d-inline-block dropdown">
+                <div tabindex="-1" role="menu" aria-hidden="true">
+                    <div class="col-sm-12 d-flex">
+                        <a href="{% url 'ip_add' %}">
+                            <button class="btn btn-success mx-auto mx-md-0 text-white">Add IP address</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<div class="col-sm-12 d-flex">
-    <a href="{% url 'ip_add' %}">
-        <button class="btn btn-success mx-auto mx-md-0 text-white">Add IP address</button>
-    </a>
-</div><br>
 <div class="main-card mb-3 card">
     <div class="card-body">
         <table style="width: 100%;" id="example" class="table table-hover table-striped table-bordered">

@@ -1,11 +1,12 @@
 from django import forms
-from django.db.models import fields
 from django.forms import ModelForm
 from django.contrib.auth.forms import AuthenticationForm
 from ipam.models import *
-from ipam.network import Network
 
 class FormIpAddress(ModelForm):
+
+    description = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+
     class Meta:
         model = Ip_address
         fields = '__all__'
@@ -13,7 +14,6 @@ class FormIpAddress(ModelForm):
         widgets = {
             'ip_address': forms.TextInput({'class':'form-control input-mask-trigger','data-inputmask':"'alias':'ip'"}),
             'hostname': forms.TextInput({'class':'form-control'}),
-            'description': forms.TextInput({'class':'form-control'}),
             'subnet': forms.Select({'class':'form-control'}),
             'os': forms.Select({'class':'form-control'}),
             'username': forms.TextInput({'class':'form-control'}),
@@ -21,6 +21,9 @@ class FormIpAddress(ModelForm):
         }
 
 class FormSubnet(ModelForm):
+
+    description = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+
     class Meta:
         model = Subnet
         fields = '__all__'
@@ -38,10 +41,12 @@ class FormSubnet(ModelForm):
             'netmask': forms.Select(choices=netmask,attrs={'class':'form-control'}),
             'ip_network': forms.TextInput({'class':'form-control input-mask-trigger','data-inputmask':"'alias':'ip'"}),
             'ip_broadcast': forms.TextInput({'class':'form-control input-mask-trigger','data-inputmask':"'alias':'ip'"}),
-            'description': forms.TextInput({'class':'form-control'}),
         }
 
 class FormApplication(ModelForm):
+
+    domain = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+
     class Meta:
         model = Application
         fields = '__all__'
@@ -54,7 +59,6 @@ class FormApplication(ModelForm):
             'protocol': forms.Select(choices=list_choices,attrs={'class':'form-control'}),
             'port': forms.TextInput({'class':'form-control'}),
             'ip': forms.Select({'class':'form-control'}),
-            'domain': forms.TextInput({'class':'form-control'}),
             'description': forms.TextInput({'class':'form-control'}),
         }
 

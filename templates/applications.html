@@ -46,8 +46,8 @@
                         <td class="text-center">{{ forloop.counter }}</td>
                         <td class="text-center"><img src="{{ app.image.url }}" height="60px"></td>
                         <td class="text-center">{{ app.name }}</td>
-                        <td class="text-center"><a href="{{app.protocol}}://{{ app.ip }}:{{ app.port }}" target="_blank">{{app.protocol}}://{{ app.ip }}:{{ app.port }}</a></td>
-                        <td class="text-center"><a href="{{app.protocol}}://{{ app.domain }}" target="_blank">{{app.protocol}}://{{ app.domain }}</a></td>
+                        <td class="text-center"><a href="{{app.protocol}}://{{ app.ip }}:{{ app.port }}" target="_blank">{{ app.ip }}:{{ app.port }}</a></td>
+                        <td class="text-center">{% if app.domain %}<a href="{{app.protocol}}://{{app.domain}}" target="_blank">{{app.domain}}{%else%}---{%endif%}</a></td>
                         <td class="text-center">{{ app.description }}</td>
                         <td class="text-center">
                             <a href="{% url 'app_edit' app.id %}" class="btn btn-primary btn-sm">Edit</a>
