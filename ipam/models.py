@@ -40,10 +40,22 @@ class Application(models.Model):
     protocol = models.CharField(max_length=5)
     ip = models.ForeignKey(Ip_address, on_delete=models.CASCADE)
     port = models.IntegerField()
+    username = models.CharField(max_length=15, null=True)
+    password = models.CharField(max_length=15, null=True) 
     domain = models.CharField(max_length=50, null=True)
     description = models.TextField(null=True)
     image = models.ImageField(upload_to='app/', null=True)
     create_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+class Database(models.Model):
+    name = models.CharField(max_length=20)
+    ip_address = models.ForeignKey(Ip_address, on_delete=models.CASCADE)
+    description = models.TextField(null=True)
+    username = models.CharField(max_length=15)
+    password = models.CharField(max_length=15)
 
     def __str__(self):
         return self.name

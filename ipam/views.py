@@ -1,6 +1,5 @@
 from django.db.models.aggregates import Count
 from django.contrib.auth.models import User
-from django.db.models.fields import NullBooleanField
 from ipam.network import Network
 from django.shortcuts import render, redirect
 from django.db.models.functions import Length
@@ -27,8 +26,8 @@ def list_user(request):
         'menu_user' : 'class=mm-active',
         'current_user' : request.user,
         'list_user' : listuser,
+        'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
     }
-    
     return render(request, 'list_user.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
@@ -47,6 +46,7 @@ def signup(request):
             'form' : form,
             'title' : 'Add User',
             'subtitle' : 'Add User to access this Application',
+            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
         }
     
     return render(request,'item-add.html', data)
@@ -146,6 +146,55 @@ def applications(request):
         'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
     }
     return render(request, 'applications.html', data)
+
+@login_required(login_url=settings.LOGIN_URL)
+def database_delete(request, id_db):
+    db = Database.objects.get(id=id_db)
+    db.delete()
+    return redirect('databases')
+
+@login_required(login_url=settings.LOGIN_URL)
+def database_edit(request, id_db):
+    db = Database.objects.get(id=id_db)
+    if request.POST:
+        form = FormDatabase(request.POST, instance=db)
+        if form.is_valid():
+            form.save()
+            return redirect('databases')
+    else:
+        form = FormDatabase(instance=db)
+        data = {
+            'form' : form,
+            'title' : 'Edit DB',
+            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+        }
+    return render(request, 'item-edit.html', data)
+
+@login_required(login_url=settings.LOGIN_URL)
+def database_add(request):
+    if request.POST:
+        form = FormDatabase(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('databases')
+    else:
+        form = FormDatabase()
+        data = {
+            'form' : form,
+            'title' : 'Add Database',
+            'subtitle' : 'Adding Database',
+            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+        }
+    return render(request, 'item-add.html', data)
+
+@login_required(login_url=settings.LOGIN_URL)
+def databases(request):
+    data = {
+        'db_list' : Database.objects.all(),
+        'menu_db' : 'class=mm-active',
+        'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+    }
+    return render(request, 'databases.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
 def ip_delete(request, id_ip):
@@ -318,7 +367,7 @@ def home(request):
         'company_email' : ConfigPortal.objects.get(config='company_email'),
         'company_website' : ConfigPortal.objects.get(config='company_website'),
         'app_name' : ConfigPortal.objects.get(config='portal_name'),
-        'app_list' : Application.objects.all(),
+        'app_list' : Application.objects.all().order_by('name'),
         'year' : now.year
     }
     return render(request, 'portal.html', data)

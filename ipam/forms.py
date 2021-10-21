@@ -46,6 +46,8 @@ class FormSubnet(ModelForm):
 class FormApplication(ModelForm):
 
     domain = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    username = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    password = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
 
     class Meta:
         model = Application
@@ -79,6 +81,21 @@ class FormOS(ModelForm):
             'name': forms.TextInput({'class':'form-control', 'placeholder':'Press Enter to add OS'}),
         }
         
+class FormDatabase(ModelForm):
+
+    description = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+
+    class Meta:
+        model = Database
+        fields = '__all__'
+
+        widgets = {
+            'name': forms.TextInput({'class':'form-control'}),
+            'ip_address': forms.Select({'class':'form-control'}),
+            'username': forms.TextInput({'class':'form-control'}),
+            'password': forms.TextInput({'class':'form-control','data-toggle':'password'}),
+        }
+
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Enter Username Here ...'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'form-control', 'placeholder':'Enter Password Here ...'}))

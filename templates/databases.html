@@ -1,0 +1,63 @@
+{% extends  'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="app-page-title">
+    <div class="page-title-wrapper">
+        <div class="page-title-heading">
+            <div class="page-title-icon">
+                <i class="pe-7s-pen icon-gradient bg-mean-fruit"></i>
+            </div>
+            <div>Database Account List
+                <div class="page-title-subheading">DB</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="main-card mb-3 card">
+            <div class="card-header">List Databases
+                <div class="btn-actions-pane-right">
+                    <a href="{% url 'db_add' %}">
+                        <button class="btn btn-success mx-auto mx-md-0 text-white">Add DB</button>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="text-center">#</th>
+                        <th class="text-center">Name</th>
+                        <th class="text-center">IP</th>
+                        <th class="text-center">Username</th>
+                        <th class="text-center">Password</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for db in db_list %}
+                    <tr>
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td class="text-center">{{ db.name }}</td>
+                        <td class="text-center">{{ db.ip_address }}</td>
+                        <td class="text-center">{% if db.username %}{{ db.username }}{%else%}---{%endif%}</td>
+                        <td class="text-center">{% if db.password %}<span id="db-password-{{ db.id }}">{{ db.password }}</span>
+                            <span id="password-{{ db.id }}" toggle="#db-password-{{ db.id }}" class="fa fa-fw fa-eye" style="float: right;"></span>{%else%}---{%endif%}</td>
+                        <td class="text-center">{{ db.description }}</td>
+                        <td class="text-center">
+                            <a href="{% url 'db_edit' db.id %}" class="btn btn-primary btn-sm">Edit</a>
+                            <a href="#" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#delete-db-{{ db.id }}">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

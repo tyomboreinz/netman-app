@@ -13,8 +13,8 @@ urlpatterns = [
     path('login/', LoginView.as_view(authentication_form=LoginForm), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 
-    path('login/', LoginView.as_view(authentication_form=LoginForm), name='login'),
-    path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    # path('login/', LoginView.as_view(authentication_form=LoginForm), name='login'),
+    # path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('dashboard', dashboard, name='dashboard'),
     path('', home, name='home'),
 
@@ -33,6 +33,11 @@ urlpatterns = [
     path('application/add', application_add, name='app_add'),
     path('application/edit/<int:id_app>', application_edit, name='app_edit'),
     path('application/delete/<int:id_app>', application_delete, name='app_delete'),
+
+    path('databases', databases, name='databases'),
+    path('database/add', database_add, name='db_add'),
+    path('database/edit/<int:id_db>', database_edit, name='db_edit'),
+    path('database/delete/<int:id_db>', database_delete, name='db_delete'),
 
     path('config/portal/edit/<int:id_config>', config_edit, name='config_edit'),
 

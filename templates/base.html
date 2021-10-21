@@ -19,6 +19,18 @@
         #ip-password-{{ ip.id }}{ -webkit-text-security: disc; }
     </style>
     {% endfor %}
+
+    {% for app in app_list %}
+    <style>
+        #app-password-{{ app.id }}{ -webkit-text-security: disc; }
+    </style>
+    {% endfor %}
+
+    {% for db in db_list %}
+    <style>
+        #db-password-{{ db.id }}{ -webkit-text-security: disc; }
+    </style>
+    {% endfor %}
     
 </head>
 
@@ -172,6 +184,12 @@
                                     <i class="metismenu-icon pe-7s-airplay"></i> Lists
                                 </a>
                             </li>
+                            <li {{ menu_db }}>
+                                <a href="{% url 'databases' %}">
+                                    <i class="metismenu-icon pe-7s-server"></i> Database
+                                </a>
+                            </li>
+
                             <li class="app-sidebar__heading">Setting</li>
                             <li {{ menu_config }}><a href="{% url 'setting' %}"><i class="metismenu-icon pe-7s-play"></i>Configuration</a></li>
                             <li {{ menu_user }}><a href="{% url 'users' %}"><i class="metismenu-icon pe-7s-user"></i>Users</a></li>
@@ -305,6 +323,54 @@
         </div>
     </div>
 </div>
+    {% if app.username %}
+    <script type="text/javascript">
+        document.getElementById('password-{{ app.id }}').onclick = function () {
+            document.getElementById('password-{{ app.id }}').classList.toggle("fa-eye-slash");
+            var text = document.getElementById('app-password-{{ app.id }}');
+            if (text.style.webkitTextSecurity == "none") {
+                text.style.webkitTextSecurity = "disc";
+            } else {
+                text.style.webkitTextSecurity = "none";
+            }
+        }
+    </script>
+    {%endif%}
+{% endfor %}
+
+{% for db in db_list %}
+<div class="modal fade" id="delete-db-{{ db.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{ db.name }} - {{ db.description }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-0">Are you sure to delete this db ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <a href="{% url 'db_delete' db.id %}" class="btn btn-danger">Yes</a>
+            </div>
+        </div>
+    </div>
+</div>
+    {% if db.username %}
+    <script type="text/javascript">
+        document.getElementById('password-{{ db.id }}').onclick = function () {
+            document.getElementById('password-{{ db.id }}').classList.toggle("fa-eye-slash");
+            var text = document.getElementById('db-password-{{ db.id }}');
+            if (text.style.webkitTextSecurity == "none") {
+                text.style.webkitTextSecurity = "disc";
+            } else {
+                text.style.webkitTextSecurity = "none";
+            }
+        }
+    </script>
+    {%endif%}
 {% endfor %}
 
 {% if user.is_staff == True %}

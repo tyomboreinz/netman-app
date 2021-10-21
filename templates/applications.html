@@ -36,6 +36,8 @@
                         <th class="text-center">Name</th>
                         <th class="text-center">IP</th>
                         <th class="text-center">Domain</th>
+                        <th class="text-center">Username</th>
+                        <th class="text-center">Password</th>
                         <th class="text-center">Description</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -48,6 +50,9 @@
                         <td class="text-center">{{ app.name }}</td>
                         <td class="text-center"><a href="{{app.protocol}}://{{ app.ip }}:{{ app.port }}" target="_blank">{{ app.ip }}:{{ app.port }}</a></td>
                         <td class="text-center">{% if app.domain %}<a href="{{app.protocol}}://{{app.domain}}" target="_blank">{{app.domain}}{%else%}---{%endif%}</a></td>
+                        <td class="text-center">{% if app.username %}{{ app.username }}{%else%}---{%endif%}</td>
+                        <td class="text-center">{% if app.password %}<span id="app-password-{{ app.id }}">{{ app.password }}</span>
+                            <span id="password-{{ app.id }}" toggle="#app-password-{{ app.id }}" class="fa fa-fw fa-eye" style="float: right;"></span>{%else%}---{%endif%}</td>
                         <td class="text-center">{{ app.description }}</td>
                         <td class="text-center">
                             <a href="{% url 'app_edit' app.id %}" class="btn btn-primary btn-sm">Edit</a>
