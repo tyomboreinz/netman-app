@@ -104,11 +104,14 @@ def application_delete(request, id_app):
 def application_edit(request, id_app):
     app = Application.objects.get(id=id_app)
     if request.POST:
-        post_value = request.FILES.copy()
-        if post_value:
-            app.image.delete()
+        # post_value = request.FILES.copy()
+        # if post_value:
+        # app.image.delete()
         form = FormApplication(request.POST, request.FILES, instance=app)
         if form.is_valid():
+            # if app.image:
+            #     print("ada gambarnya")
+            #     app.image.delete()
             form.save()
             return redirect('applications')
     else:
@@ -148,53 +151,60 @@ def applications(request):
     return render(request, 'applications.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
-def database_delete(request, id_db):
-    db = Database.objects.get(id=id_db)
-    db.delete()
-    return redirect('databases')
+def credential_delete(request, id_cred):
+    cred = Credential.objects.get(id=id_cred)
+    cred.delete()
+    return redirect('credentials')
 
 @login_required(login_url=settings.LOGIN_URL)
-def database_edit(request, id_db):
-    db = Database.objects.get(id=id_db)
+def credential_edit(request, id_cred):
+    cred = Credential.objects.get(id=id_cred)
     if request.POST:
-        form = FormDatabase(request.POST, instance=db)
+        post_value = request.POST.copy()
+        post_value['owner'] = request.user
+        form = FormCredential(post_value, instance=cred)
         if form.is_valid():
             form.save()
-            return redirect('databases')
+            return redirect('credentials')
     else:
-        form = FormDatabase(instance=db)
+        form = FormCredential(instance=cred)
+        form.fields['owner'].widget = forms.HiddenInput()
         data = {
             'form' : form,
-            'title' : 'Edit DB',
+            'title' : 'Edit Credential',
             'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-edit.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
-def database_add(request):
+def credential_add(request):
     if request.POST:
-        form = FormDatabase(request.POST)
+        post_value = request.POST.copy()
+        post_value['owner'] = request.user
+        form = FormCredential(post_value)
         if form.is_valid():
             form.save()
-            return redirect('databases')
+            return redirect('credentials')
     else:
-        form = FormDatabase()
+        form = FormCredential()
+        form.fields['owner'].widget = forms.HiddenInput()
         data = {
             'form' : form,
-            'title' : 'Add Database',
-            'subtitle' : 'Adding Database',
+            'title' : 'Add Credential',
+            'subtitle' : 'Adding Credential',
             'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-add.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
-def databases(request):
+def credentials(request):
     data = {
-        'db_list' : Database.objects.all(),
-        'menu_db' : 'class=mm-active',
+        # 'cred_list' : Credential.objects.all().order_by('type'),
+        'cred_list' : Credential.objects.filter(owner=request.user).order_by('type'),
+        'menu_cred' : 'class=mm-active',
         'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
     }
-    return render(request, 'databases.html', data)
+    return render(request, 'credentials.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
 def ip_delete(request, id_ip):

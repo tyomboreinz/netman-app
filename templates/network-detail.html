@@ -38,8 +38,6 @@
                 <th>#</th>
                 <th>IP Address</th>
                 <th>Hostname</th>
-                <th>User</th>
-                <th>Password</th>
                 <th>Operating System</th>
                 <th>Description</th>
                 <th>Action</th>
@@ -51,10 +49,6 @@
                     <td>{{ forloop.counter }}</td>
                     <td>{{ ip.ip_address }}</td>
                     <td>{{ ip.hostname }}</td>
-                    <td>{{ ip.username }}</td>
-                    <td><span id="ip-password-{{ ip.id }}" style="float: left;">{{ ip.password }}</span>
-                        <span id="password-{{ ip.id }}" toggle="#ip-password-{{ ip.id }}" class="fa fa-fw fa-eye" style="float: right;"></span>
-                    </td>
                     <td>{{ ip.os }}</td>
                     <td>{{ ip.description }}</td>
                     <td>
@@ -69,8 +63,6 @@
                     <th>#</th>
                     <th>IP Address</th>
                     <th>Hostname</th>
-                    <th>User</th>
-                    <th>Password</th>
                     <th>Operating System</th>
                     <th>Description</th>
                     <th>Action</th>

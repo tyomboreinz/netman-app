@@ -34,10 +34,10 @@ urlpatterns = [
     path('application/edit/<int:id_app>', application_edit, name='app_edit'),
     path('application/delete/<int:id_app>', application_delete, name='app_delete'),
 
-    path('databases', databases, name='databases'),
-    path('database/add', database_add, name='db_add'),
-    path('database/edit/<int:id_db>', database_edit, name='db_edit'),
-    path('database/delete/<int:id_db>', database_delete, name='db_delete'),
+    path('credentials', credentials, name='credentials'),
+    path('credential/add', credential_add, name='cred_add'),
+    path('credential/edit/<int:id_cred>', credential_edit, name='cred_edit'),
+    path('credential/delete/<int:id_cred>', credential_delete, name='cred_delete'),
 
     path('config/portal/edit/<int:id_config>', config_edit, name='config_edit'),
 

@@ -64,4 +64,16 @@ class Migration(migrations.Migration):
                 ('ip', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ipam.ip_address')),
             ],
         ),
+        migrations.CreateModel(
+            name='Database',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=20)),
+                ('description', models.TextField(null=True)),
+                ('username', models.CharField(max_length=15)),
+                ('password', models.CharField(max_length=50)),
+                ('owner', models.CharField(max_length=15)),
+                ('ip_address', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ipam.ip_address')),
+            ],
+        ),
     ]

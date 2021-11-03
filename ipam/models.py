@@ -21,8 +21,8 @@ class Ip_address(models.Model):
     hostname = models.CharField(max_length=25)
     description = models.TextField(null=True)
     subnet = models.ForeignKey(Subnet, on_delete=models.CASCADE)
-    username = models.CharField(max_length=15)
-    password = models.CharField(max_length=15)
+    # username = models.CharField(max_length=15,null=True)
+    # password = models.CharField(max_length=15,null=True)
     os = models.ForeignKey(OS,on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
@@ -40,8 +40,8 @@ class Application(models.Model):
     protocol = models.CharField(max_length=5)
     ip = models.ForeignKey(Ip_address, on_delete=models.CASCADE)
     port = models.IntegerField()
-    username = models.CharField(max_length=15, null=True)
-    password = models.CharField(max_length=15, null=True) 
+    # username = models.CharField(max_length=15, null=True)
+    # password = models.CharField(max_length=50, null=True) 
     domain = models.CharField(max_length=50, null=True)
     description = models.TextField(null=True)
     image = models.ImageField(upload_to='app/', null=True)
@@ -50,12 +50,13 @@ class Application(models.Model):
     def __str__(self):
         return self.name
 
-class Database(models.Model):
-    name = models.CharField(max_length=20)
+class Credential(models.Model):
+    type = models.CharField(max_length=15)
     ip_address = models.ForeignKey(Ip_address, on_delete=models.CASCADE)
     description = models.TextField(null=True)
-    username = models.CharField(max_length=15)
-    password = models.CharField(max_length=15)
+    username = models.CharField(max_length=30)
+    password = models.CharField(max_length=50)
+    owner = models.CharField(max_length=15, null=True)
 
     def __str__(self):
-        return self.name
+        return self.type

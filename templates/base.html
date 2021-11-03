@@ -26,9 +26,9 @@
     </style>
     {% endfor %}
 
-    {% for db in db_list %}
+    {% for cred in cred_list %}
     <style>
-        #db-password-{{ db.id }}{ -webkit-text-security: disc; }
+        #cred-password-{{ cred.id }}{ -webkit-text-security: disc; }
     </style>
     {% endfor %}
     
@@ -184,9 +184,9 @@
                                     <i class="metismenu-icon pe-7s-airplay"></i> Lists
                                 </a>
                             </li>
-                            <li {{ menu_db }}>
-                                <a href="{% url 'databases' %}">
-                                    <i class="metismenu-icon pe-7s-server"></i> Database
+                            <li {{ menu_cred }}>
+                                <a href="{% url 'credentials' %}">
+                                    <i class="metismenu-icon pe-7s-server"></i> Credentials
                                 </a>
                             </li>
 
@@ -234,18 +234,6 @@
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    document.getElementById('password-{{ ip.id }}').onclick = function () {
-        document.getElementById('password-{{ ip.id }}').classList.toggle("fa-eye-slash");
-        var text = document.getElementById('ip-password-{{ ip.id }}');
-        if (text.style.webkitTextSecurity == "none") {
-            text.style.webkitTextSecurity = "disc";
-        } else {
-            text.style.webkitTextSecurity = "none";
-        }
-    }
-</script>
 
 {% endfor %}
 
@@ -323,46 +311,33 @@
         </div>
     </div>
 </div>
-    {% if app.username %}
-    <script type="text/javascript">
-        document.getElementById('password-{{ app.id }}').onclick = function () {
-            document.getElementById('password-{{ app.id }}').classList.toggle("fa-eye-slash");
-            var text = document.getElementById('app-password-{{ app.id }}');
-            if (text.style.webkitTextSecurity == "none") {
-                text.style.webkitTextSecurity = "disc";
-            } else {
-                text.style.webkitTextSecurity = "none";
-            }
-        }
-    </script>
-    {%endif%}
 {% endfor %}
 
-{% for db in db_list %}
-<div class="modal fade" id="delete-db-{{ db.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{% for cred in cred_list %}
+<div class="modal fade" id="delete-cred-{{ cred.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ db.name }} - {{ db.description }}</h5>
+                <h5 class="modal-title" id="exampleModalLabel">{{ cred.name }} - {{ cred.description }}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p class="mb-0">Are you sure to delete this db ?</p>
+                <p class="mb-0">Are you sure to delete this cred ?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-                <a href="{% url 'db_delete' db.id %}" class="btn btn-danger">Yes</a>
+                <a href="{% url 'cred_delete' cred.id %}" class="btn btn-danger">Yes</a>
             </div>
         </div>
     </div>
 </div>
-    {% if db.username %}
+    {% if cred.username %}
     <script type="text/javascript">
-        document.getElementById('password-{{ db.id }}').onclick = function () {
-            document.getElementById('password-{{ db.id }}').classList.toggle("fa-eye-slash");
-            var text = document.getElementById('db-password-{{ db.id }}');
+        document.getElementById('password-{{ cred.id }}').onclick = function () {
+            document.getElementById('password-{{ cred.id }}').classList.toggle("fa-eye-slash");
+            var text = document.getElementById('cred-password-{{ cred.id }}');
             if (text.style.webkitTextSecurity == "none") {
                 text.style.webkitTextSecurity = "disc";
             } else {

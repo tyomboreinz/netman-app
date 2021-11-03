@@ -30,6 +30,8 @@
                 <a href="/dhcp/static" class="btn btn-warning">Back</a>
             {% elif title == 'Edit App' %}
                 <a href="/applications" class="btn btn-warning">Back</a>
+                {% elif title == 'Edit Credential' %}
+                <a href="/credentials" class="btn btn-warning">Back</a>
             {% else %}
                 <a href="/network/{{ ip.subnet_id }}" class="btn btn-warning">Back</a>
             {% endif %}

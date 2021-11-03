@@ -16,8 +16,6 @@ class FormIpAddress(ModelForm):
             'hostname': forms.TextInput({'class':'form-control'}),
             'subnet': forms.Select({'class':'form-control'}),
             'os': forms.Select({'class':'form-control'}),
-            'username': forms.TextInput({'class':'form-control'}),
-            'password': forms.TextInput({'class':'form-control','data-toggle':'password'}),
         }
 
 class FormSubnet(ModelForm):
@@ -46,8 +44,6 @@ class FormSubnet(ModelForm):
 class FormApplication(ModelForm):
 
     domain = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
-    username = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
-    password = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
 
     class Meta:
         model = Application
@@ -81,16 +77,16 @@ class FormOS(ModelForm):
             'name': forms.TextInput({'class':'form-control', 'placeholder':'Press Enter to add OS'}),
         }
         
-class FormDatabase(ModelForm):
+class FormCredential(ModelForm):
 
     description = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
 
     class Meta:
-        model = Database
+        model = Credential
         fields = '__all__'
 
         widgets = {
-            'name': forms.TextInput({'class':'form-control'}),
+            'type': forms.TextInput({'class':'form-control'}),
             'ip_address': forms.Select({'class':'form-control'}),
             'username': forms.TextInput({'class':'form-control'}),
             'password': forms.TextInput({'class':'form-control','data-toggle':'password'}),
