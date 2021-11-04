@@ -52,7 +52,7 @@ class Application(models.Model):
 
 class Credential(models.Model):
     type = models.CharField(max_length=15)
-    ip_address = models.ForeignKey(Ip_address, on_delete=models.CASCADE)
+    ip = models.ForeignKey(Ip_address, on_delete=models.CASCADE)
     description = models.TextField(null=True)
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=50)

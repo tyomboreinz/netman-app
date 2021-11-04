@@ -199,8 +199,7 @@ def credential_add(request):
 @login_required(login_url=settings.LOGIN_URL)
 def credentials(request):
     data = {
-        # 'cred_list' : Credential.objects.all().order_by('type'),
-        'cred_list' : Credential.objects.filter(owner=request.user).order_by('type'),
+        'cred_list' : Credential.objects.filter(owner=request.user).order_by('ip__ip_address', 'type'),
         'menu_cred' : 'class=mm-active',
         'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
     }
