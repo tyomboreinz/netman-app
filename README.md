@@ -25,10 +25,10 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 ```
 
-Then insert default configuration of dhcp server
+Then insert default configuration of Portal
 
 ```bash
-python3 manage.py loaddata data/*.json
+python3 manage.py loaddata data/ConfigPortal.json
 ```
 
 insert user dan password
