@@ -87,7 +87,7 @@ class FormCredential(ModelForm):
 
         widgets = {
             'type': forms.TextInput({'class':'form-control'}),
-            'ip_address': forms.Select({'class':'form-control'}),
+            'ip': forms.Select({'class':'form-control'}),
             'username': forms.TextInput({'class':'form-control'}),
             'password': forms.TextInput({'class':'form-control','data-toggle':'password'}),
         }

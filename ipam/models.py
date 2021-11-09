@@ -21,8 +21,6 @@ class Ip_address(models.Model):
     hostname = models.CharField(max_length=25)
     description = models.TextField(null=True)
     subnet = models.ForeignKey(Subnet, on_delete=models.CASCADE)
-    # username = models.CharField(max_length=15,null=True)
-    # password = models.CharField(max_length=15,null=True)
     os = models.ForeignKey(OS,on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
@@ -40,8 +38,6 @@ class Application(models.Model):
     protocol = models.CharField(max_length=5)
     ip = models.ForeignKey(Ip_address, on_delete=models.CASCADE)
     port = models.IntegerField()
-    # username = models.CharField(max_length=15, null=True)
-    # password = models.CharField(max_length=50, null=True) 
     domain = models.CharField(max_length=50, null=True)
     description = models.TextField(null=True)
     image = models.ImageField(upload_to='app/', null=True)

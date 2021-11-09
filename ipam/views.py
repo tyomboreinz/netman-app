@@ -130,7 +130,6 @@ def application_add(request):
         if form.is_valid():
             form.save()
             return redirect('applications')
-        
     else:
         form = FormApplication()
         data = {
