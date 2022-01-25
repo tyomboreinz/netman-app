@@ -56,7 +56,7 @@ class FormApplication(ModelForm):
             'name': forms.TextInput({'class':'form-control'}),
             'protocol': forms.Select(choices=list_choices,attrs={'class':'form-control'}),
             'port': forms.TextInput({'class':'form-control'}),
-            'ip': forms.Select({'class':'form-control'}),
+            'ip': forms.Select({'class':'multiselect-dropdown form-control'}),
             'description': forms.TextInput({'class':'form-control'}),
         }
 
@@ -76,7 +76,7 @@ class FormOS(ModelForm):
         widgets = {
             'name': forms.TextInput({'class':'form-control', 'placeholder':'Press Enter to add OS'}),
         }
-        
+
 class FormCredential(ModelForm):
 
     description = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
@@ -87,7 +87,7 @@ class FormCredential(ModelForm):
 
         widgets = {
             'type': forms.TextInput({'class':'form-control'}),
-            'ip': forms.Select({'class':'form-control'}),
+            'ip': forms.Select({'class':'multiselect-dropdown form-control'}),
             'username': forms.TextInput({'class':'form-control'}),
             'password': forms.TextInput({'class':'form-control','data-toggle':'password'}),
         }
