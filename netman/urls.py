@@ -1,3 +1,4 @@
+from tokenize import group
 from django.contrib import admin
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
@@ -10,11 +11,16 @@ urlpatterns = [
     path('users/', list_user, name='users'),
     path('user/add', signup, name='signup'),
     path('user/delete/<str:username>', del_user, name='del_user'),
+
+    path('group/', group_list, name='group'),
+    path('group/add', group_add, name='group_add'),
+    path('group/active/<int:id_group>', group_active, name='group_active'),
+    path('group/edit/<int:id_group>', group_edit, name='group_edit'),
+    path('group/delete/<int:id_group>', group_delete, name='group_delete'),
+
     path('login/', LoginView.as_view(authentication_form=LoginForm), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 
-    # path('login/', LoginView.as_view(authentication_form=LoginForm), name='login'),
-    # path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
     path('dashboard', dashboard, name='dashboard'),
     path('', home, name='home'),
 

@@ -13,6 +13,64 @@ from ipam.forms import *
 from django.contrib.auth import get_user_model
 import datetime, random, ipcalc
 
+@login_required(login_url=settings.LOGIN_URL)
+def group_list(request):
+    data = {
+        'group_list' : Group.objects.all(),
+        'menu_group' : 'class=mm-active',
+        'active_group' : Group.objects.get(is_active=1),
+        'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
+    }
+    return render(request, 'group.html', data)
+
+@login_required(login_url=settings.LOGIN_URL)
+def group_active(request, id_group):
+    Group.objects.filter(is_active=1).update(is_active=0)
+    Group.objects.filter(id=id_group).update(is_active=1)
+    return redirect('/group/')
+
+@login_required(login_url=settings.LOGIN_URL)
+def group_add(request):
+    if request.POST:
+        form = FormGroup(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('group')
+    else:
+        form = FormGroup()
+        data = {
+            'form' : form,
+            'title' : 'Add Group',
+            'subtitle' : 'Adding Group',
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
+        }
+    return render(request, 'item-add.html', data)
+
+@login_required(login_url=settings.LOGIN_URL)
+def group_edit(request, id_group):
+    set = Group.objects.get(id=id_group)
+    if request.POST:
+        form = FormGroup(request.POST, instance=set)
+        if form.is_valid():
+            form.save()
+            return redirect('/group')
+    else:
+        form = FormGroup(instance=set)
+        data = {
+            'form' : form,
+            'title' : 'Edit Group',
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
+        }
+    return render(request, 'item-edit.html', data)
+
+@staff_member_required(login_url=settings.LOGIN_URL)
+def group_delete(request, id_group):
+    group = Group.objects.get(id=id_group)
+    group.delete()
+    return redirect('/group/')
+
 @staff_member_required(login_url=settings.LOGIN_URL)
 def del_user(request, username):
     userdelete = User.objects.get(username=username)
@@ -26,7 +84,8 @@ def list_user(request):
         'menu_user' : 'class=mm-active',
         'current_user' : request.user,
         'list_user' : listuser,
-        'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+        'active_group' : Group.objects.get(is_active=1),
+        'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
     }
     return render(request, 'list_user.html', data)
 
@@ -46,7 +105,8 @@ def signup(request):
             'form' : form,
             'title' : 'Add User',
             'subtitle' : 'Add User to access this Application',
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     
     return render(request,'item-add.html', data)
@@ -71,7 +131,8 @@ def setting_os(request):
             'form' : form,
             'os_data' : OS.objects.all().order_by('name'),
             'configs' : ConfigPortal.objects.all().order_by('config'),
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
             }
     return render(request, 'setting.html', data)
 
@@ -88,7 +149,8 @@ def config_edit(request, id_config):
         data = {
             'form' : form,
             'title' : 'Edit Config Portal - ' + str(set.config).upper(),
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-edit.html', data)
 
@@ -105,8 +167,9 @@ def application_edit(request, id_app):
     app = Application.objects.get(id=id_app)
     if request.POST:
         # post_value = request.FILES.copy()
-        # if post_value:
-        # app.image.delete()
+        if request.FILES:
+            app.image.delete()
+            print('terhapus')
         form = FormApplication(request.POST, request.FILES, instance=app)
         if form.is_valid():
             # if app.image:
@@ -119,7 +182,8 @@ def application_edit(request, id_app):
         data = {
             'form' : form,
             'title' : 'Edit App',
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-edit.html', data)
 
@@ -128,7 +192,8 @@ def application_add(request):
     if request.POST:
         form = FormApplication(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            new_app = form.save()
+            # Application.objects.filter(id=new_app.id) # get id from new object
             return redirect('applications')
     else:
         form = FormApplication()
@@ -136,16 +201,19 @@ def application_add(request):
             'form' : form,
             'title' : 'Add App',
             'subtitle' : 'Adding Applications',
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-add.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
 def applications(request):
     data = {
-        'app_list' : Application.objects.all(),
+        'active_group' : Group.objects.get(is_active=1),
+        'app_list' : Application.objects.filter(ip__subnet__group__is_active=1),
         'menu_app' : 'class=mm-active',
-        'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+        'active_group' : Group.objects.get(is_active=1),
+        'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
     }
     return render(request, 'applications.html', data)
 
@@ -167,11 +235,11 @@ def credential_edit(request, id_cred):
             return redirect('credentials')
     else:
         form = FormCredential(instance=cred)
-        form.fields['owner'].widget = forms.HiddenInput()
         data = {
             'form' : form,
             'title' : 'Edit Credential',
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-edit.html', data)
 
@@ -191,16 +259,18 @@ def credential_add(request):
             'form' : form,
             'title' : 'Add Credential',
             'subtitle' : 'Adding Credential',
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-add.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
 def credentials(request):
     data = {
-        'cred_list' : Credential.objects.filter(owner=request.user).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('ip__ip_address', 'type'),
+        'cred_list' : Credential.objects.filter(owner=request.user, ip__subnet__group__is_active=1).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('ip__ip_address', 'type'),
         'menu_cred' : 'class=mm-active',
-        'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+        'active_group' : Group.objects.get(is_active=1),
+        'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
     }
     return render(request, 'credentials.html', data)
 
@@ -225,7 +295,8 @@ def ip_edit(request, id_ip):
             'form' : form,
             'ip' : ip,
             'title' : 'Edit IP Address',
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-edit.html', data)
 
@@ -241,7 +312,8 @@ def ip_add(request):
         form = FormIpAddress()
         data = {
             'form' : form,
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
             'title' : 'Add IP',
             'subtile' : 'Adding IP Address to manage'
         }
@@ -270,16 +342,18 @@ def network_edit(request, id_subnet):
         data = {
             'form' : form,
             'subnet' : subnet,
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
             'title' : 'Edit Network',
         }
     return render(request, 'item-edit.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
 def network_detail(request, id_subnet):
-    ips = Ip_address.objects.filter(subnet=id_subnet).order_by(Length('ip_address').asc(), 'ip_address')
+    ips = Ip_address.objects.filter(subnet=id_subnet,subnet__group__is_active=1).order_by(Length('ip_address').asc(), 'ip_address')
     data = {
-        'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+        'active_group' : Group.objects.get(is_active=1),
+        'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         'id_subnet' : id_subnet,
         'ips' : ips,
         'menu_network_detail' : 'class=mm-active',
@@ -294,6 +368,7 @@ def network_add(request):
         subnet = ipcalc.Network(str(post_value['ip_network']+'/'+str(post_value['netmask'])))
         post_value['ip_network'] = str(subnet.network())
         post_value['ip_broadcast'] = str(subnet.broadcast())
+        post_value['group'] = str(getattr(Group.objects.get(is_active=1), 'id'))
         form = FormSubnet(post_value)
         if form.is_valid():
             form.save()
@@ -301,9 +376,11 @@ def network_add(request):
     else:
         form = FormSubnet()
         form.fields['ip_broadcast'].widget = forms.HiddenInput()
+        form.fields['group'].widget = forms.HiddenInput()
         data = {
             'form' : form,
-            'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+            'active_group' : Group.objects.get(is_active=1),
+            'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
             'title' : 'Add Network',
             'subtitle' : 'Adding Network to more connect with other'
         }
@@ -311,8 +388,9 @@ def network_add(request):
 
 @login_required(login_url=settings.LOGIN_URL)
 def network_list(request):
-    subnets = Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network')
+    subnets = Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network')
     data = {
+        'active_group' : Group.objects.get(is_active=1),
         'subnets' : subnets,
         'sidebar_subnets' : subnets,
         'menu_network_list' : 'class=mm-active',
@@ -361,7 +439,8 @@ def dashboard(request):
         'total_app' : Application.objects.all().count(),
         'data_os' : data_os,
         'menu_dashboard' : 'class=mm-active',
-        'sidebar_subnets' : Subnet.objects.all().order_by(Length('ip_network').asc(), 'ip_network'),
+        'active_group' : Group.objects.get(is_active=1),
+        'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
     }
     return render(request, 'dashboard.html', data)
 

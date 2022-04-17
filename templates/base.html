@@ -71,7 +71,7 @@
             </div>
             <div class="app-header__content">
                 <div class="app-header-left">
-                    
+                    <button class="mb-2 mr-2 btn-pill btn btn-info disabled">{{ active_group.name }}</button>
                 </div>
                 <div class="app-header-right">
                     <div class="header-btn-lg pr-0">
@@ -192,6 +192,7 @@
 
                             <li class="app-sidebar__heading">Setting</li>
                             <li {{ menu_config }}><a href="{% url 'setting' %}"><i class="metismenu-icon pe-7s-play"></i>Configuration</a></li>
+                            <li {{ menu_group }}><a href="{% url 'group' %}"><i class="metismenu-icon pe-7s-users"></i>Group</a></li>
                             <li {{ menu_user }}><a href="{% url 'users' %}"><i class="metismenu-icon pe-7s-user"></i>Users</a></li>
                         </ul>
                     </div>
@@ -346,6 +347,32 @@
         }
     </script>
     {%endif%}
+{% endfor %}
+
+{% for group in group_list %}
+    {% if group.is_active == 0 %}
+        <div class="modal fade" id="delete-group-{{ group.id }}" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">{{ group.name }} - {{ group.description }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-0">Are you sure to delete all subnet, ip address and application on <b>{{ group.name }}</b> ?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <a href="{% url 'group_delete' group.id %}" class="btn btn-danger">Yes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+    {% endif %}
 {% endfor %}
 
 {% if user.is_staff == True %}

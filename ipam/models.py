@@ -1,6 +1,14 @@
 from django.db import models
 from django.db.models.base import Model
 
+class Group(models.Model):
+    name = models.CharField(max_length=20)
+    description = models.CharField(max_length=50, null=True)
+    is_active = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.name
+
 class OS(models.Model):
     name = models.CharField(max_length=20)
 
@@ -12,6 +20,7 @@ class Subnet(models.Model):
     netmask = models.CharField(max_length=15)
     ip_broadcast = models.CharField(max_length=15)
     description = models.TextField(null=True)
+    group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.ip_network
@@ -52,7 +61,7 @@ class Credential(models.Model):
     description = models.TextField(null=True)
     username = models.CharField(max_length=30)
     password = models.CharField(max_length=50)
-    owner = models.CharField(max_length=15, null=True)
+    owner = models.CharField(max_length=15)
 
     def __str__(self):
         return self.type

@@ -27,14 +27,14 @@ class FormSubnet(ModelForm):
         fields = '__all__'
 
         netmask = ()
-        for i in range(16, 31):
+        for i in range(16, 32):
             net = (str(i), str(i))
             netmask += (net,)
 
         labels = {
             'ip_network' : "IP "
         }
-
+        
         widgets = {
             'netmask': forms.Select(choices=netmask,attrs={'class':'form-control'}),
             'ip_network': forms.TextInput({'class':'form-control input-mask-trigger','data-inputmask':"'alias':'ip'"}),
@@ -44,10 +44,13 @@ class FormSubnet(ModelForm):
 class FormApplication(ModelForm):
 
     domain = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    description = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+    image = forms.FileField(required=False,widget=forms.FileInput(attrs={'class' : 'form-control-file'}))
 
     class Meta:
         model = Application
         fields = '__all__'
+        
         list_choices = (
             ('http', 'http'),
             ('https', 'https'), )
@@ -57,7 +60,6 @@ class FormApplication(ModelForm):
             'protocol': forms.Select(choices=list_choices,attrs={'class':'form-control'}),
             'port': forms.TextInput({'class':'form-control'}),
             'ip': forms.Select({'class':'multiselect-dropdown form-control'}),
-            'description': forms.TextInput({'class':'form-control'}),
         }
 
 class FormConfigs(ModelForm):
@@ -90,6 +92,18 @@ class FormCredential(ModelForm):
             'ip': forms.Select({'class':'multiselect-dropdown form-control'}),
             'username': forms.TextInput({'class':'form-control'}),
             'password': forms.TextInput({'class':'form-control','data-toggle':'password'}),
+        }
+
+class FormGroup(ModelForm):
+
+    description = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
+
+    class Meta:
+        model = Group
+        fields = ['name', 'description']
+
+        widgets = {
+            'name': forms.TextInput({'class':'form-control'}),
         }
 
 class LoginForm(AuthenticationForm):
