@@ -11,7 +11,7 @@ from django.conf import settings
 from ipam.models import *
 from ipam.forms import *
 from django.contrib.auth import get_user_model
-import datetime, random, ipcalc
+import datetime, random, ipcalc, subprocess
 
 @login_required(login_url=settings.LOGIN_URL)
 def group_list(request):
@@ -409,7 +409,10 @@ def network_list(request):
 def network_scan(request, id_subnet):
     subnet = Subnet.objects.get(id=id_subnet)
     existing_ip = Ip_address.objects.filter(subnet=id_subnet)
-    lists_ip = Network.network_scan(subnet.ip_network +"/"+ subnet.netmask)
+
+    x = subprocess.check_output("nmap -sn "+ subnet.ip_network +"/"+ subnet.netmask +""" | grep report | awk '{print $NF}' | sed 's/(//g' | sed 's/)//g' """, shell=True, text=False)
+    x_decode = x.decode("utf-8")
+    lists_ip = list(filter(None,(x_decode.split("\n"))))
 
     for ip in lists_ip:
         token = 0
