@@ -192,6 +192,12 @@ def application_add(request):
             return redirect('applications')
     else:
         form = FormApplication()
+        ips = Ip_address.objects.filter(subnet__group__is_active=1).values('id', 'ip_address').order_by(Length('ip_address').asc(), 'ip_address')
+        list_choices = ()
+        for ip in ips:
+            address = (str(ip['id']), ip['ip_address'])
+            list_choices += (address,)
+        form.fields['ip'].choices = list_choices
         data = {
             'form' : form,
             'title' : 'Add App',
@@ -249,6 +255,12 @@ def credential_add(request):
             return redirect('credentials')
     else:
         form = FormCredential()
+        ips = Ip_address.objects.filter(subnet__group__is_active=1).values('id', 'ip_address').order_by(Length('ip_address').asc(), 'ip_address')
+        list_choices = ()
+        for ip in ips:
+            address = (str(ip['id']), ip['ip_address'])
+            list_choices += (address,)
+        form.fields['ip'].choices = list_choices
         form.fields['owner'].widget = forms.HiddenInput()
         data = {
             'form' : form,
