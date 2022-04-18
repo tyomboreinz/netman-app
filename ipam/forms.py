@@ -45,7 +45,6 @@ class FormApplication(ModelForm):
 
     domain = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
     description = forms.CharField(required=False,widget=forms.TextInput(attrs={'class' : 'form-control'}))
-    image = forms.FileField(required=False,widget=forms.FileInput(attrs={'class' : 'form-control-file'}))
 
     class Meta:
         model = Application

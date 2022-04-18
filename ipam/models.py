@@ -49,7 +49,7 @@ class Application(models.Model):
     port = models.IntegerField()
     domain = models.CharField(max_length=50, null=True)
     description = models.TextField(null=True)
-    image = models.ImageField(upload_to='app/', null=True)
+    image = models.ImageField(upload_to='app/')
     create_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

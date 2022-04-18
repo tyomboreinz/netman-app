@@ -166,15 +166,10 @@ def application_delete(request, id_app):
 def application_edit(request, id_app):
     app = Application.objects.get(id=id_app)
     if request.POST:
-        # post_value = request.FILES.copy()
         if request.FILES:
             app.image.delete()
-            print('terhapus')
         form = FormApplication(request.POST, request.FILES, instance=app)
         if form.is_valid():
-            # if app.image:
-            #     print("ada gambarnya")
-            #     app.image.delete()
             form.save()
             return redirect('applications')
     else:
