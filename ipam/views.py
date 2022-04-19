@@ -1,6 +1,6 @@
+from ipaddress import ip_address
 from django.db.models.aggregates import Count
 from django.contrib.auth.models import User
-from ipam.network import Network
 from django.shortcuts import render, redirect
 from django.db.models.functions import Length
 from django.contrib.auth.decorators import login_required
@@ -184,11 +184,12 @@ def application_edit(request, id_app):
 
 @login_required(login_url=settings.LOGIN_URL)
 def application_add(request):
+    group_ = Group.objects.get(is_active=1)
     if request.POST:
         form = FormApplication(request.POST, request.FILES)
         if form.is_valid():
             new_app = form.save()
-            # Application.objects.filter(id=new_app.id) # get id from new object
+            Application.objects.filter(id=new_app.id).update(group=group_.id)
             return redirect('applications')
     else:
         form = FormApplication()
@@ -202,7 +203,7 @@ def application_add(request):
             'form' : form,
             'title' : 'Add App',
             'subtitle' : 'Adding Applications',
-            'active_group' : Group.objects.get(is_active=1),
+            'active_group' : group_,
             'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-add.html', data)
@@ -211,7 +212,8 @@ def application_add(request):
 def applications(request):
     data = {
         'active_group' : Group.objects.get(is_active=1),
-        'app_list' : Application.objects.filter(ip__subnet__group__is_active=1),
+        # 'app_list' : Application.objects.filter(ip__subnet__group__is_active=1),
+        'app_list' : Application.objects.filter(group__is_active=1),
         'menu_app' : 'class=mm-active',
         'active_group' : Group.objects.get(is_active=1),
         'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
@@ -317,9 +319,16 @@ def ip_add(request):
             return redirect('/network/' + str(subnet.id))
     else:
         form = FormIpAddress()
+        ips = Subnet.objects.filter(group__is_active=1).values('id', 'ip_network', 'description').order_by(Length('ip_network').asc(), 'ip_network')
+        list_choices = ()
+        for ip in ips:
+            address = (str(ip['id']), ip['ip_network'] +" - "+ ip['description'])
+            list_choices += (address,)
+        form.fields['subnet'].choices = list_choices
         data = {
             'form' : form,
             'active_group' : Group.objects.get(is_active=1),
+            'active_subnet' : ConfigPortal.objects.get(config="active_subnet"),
             'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
             'title' : 'Add IP',
             'subtile' : 'Adding IP Address to manage'
@@ -346,6 +355,7 @@ def network_edit(request, id_subnet):
             return redirect('/network')
     else:
         form = FormSubnet(instance=subnet)
+        form.fields['group'].widget = forms.HiddenInput()
         data = {
             'form' : form,
             'subnet' : subnet,
@@ -357,6 +367,7 @@ def network_edit(request, id_subnet):
 
 @login_required(login_url=settings.LOGIN_URL)
 def network_detail(request, id_subnet):
+    ConfigPortal.objects.filter(config="active_subnet").update(value=id_subnet)
     ips = Ip_address.objects.filter(subnet=id_subnet,subnet__group__is_active=1).order_by(Length('ip_address').asc(), 'ip_address')
     data = {
         'active_group' : Group.objects.get(is_active=1),
@@ -464,7 +475,7 @@ def home(request):
         'company_email' : ConfigPortal.objects.get(config='company_email'),
         'company_website' : ConfigPortal.objects.get(config='company_website'),
         'app_name' : ConfigPortal.objects.get(config='portal_name'),
-        'app_list' : Application.objects.all().order_by('name'),
+        'app_list' : Application.objects.order_by('group__name','name'),
         'year' : now.year
     }
     return render(request, 'portal.html', data)

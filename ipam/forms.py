@@ -49,6 +49,8 @@ class FormApplication(ModelForm):
     class Meta:
         model = Application
         fields = '__all__'
+
+        exclude = ['group']
         
         list_choices = (
             ('http', 'http'),

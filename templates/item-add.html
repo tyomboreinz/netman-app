@@ -10,7 +10,7 @@
             </div>
             <div>
                 {{ title }}
-                <div class="page-title-subheading">{{ subtitle }}</div>
+                <div class="page-title-subheading">{{ subtile }}</div>
             </div>
         </div>
     </div>
@@ -28,6 +28,17 @@
             <button class="btn btn-success mx-auto mx-md-0 text-white">
                 Add
             </button>
+            {% if title == 'Add App' %}
+                <a href="/applications" class="btn btn-warning">Back</a>
+            {% elif title == 'Add Credential' %}
+                <a href="/credentials" class="btn btn-warning">Back</a>
+            {% elif title == 'Add Group' %}
+                <a href="/group" class="btn btn-warning">Back</a>
+            {% elif title == 'Add User' %}
+                <a href="/users" class="btn btn-warning">Back</a>
+            {% else %}
+                <a href="/network/{{ active_subnet.value }}" class="btn btn-warning">Back</a>
+            {% endif %}
         </form>
     </div>
 </div>

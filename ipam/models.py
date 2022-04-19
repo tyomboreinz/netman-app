@@ -1,3 +1,4 @@
+from tokenize import group
 from django.db import models
 from django.db.models.base import Model
 
@@ -19,7 +20,7 @@ class Subnet(models.Model):
     ip_network = models.CharField(max_length=15)
     netmask = models.CharField(max_length=15)
     ip_broadcast = models.CharField(max_length=15)
-    description = models.TextField(null=True)
+    description = models.TextField()
     group = models.ForeignKey(Group, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -50,6 +51,7 @@ class Application(models.Model):
     domain = models.CharField(max_length=50, null=True)
     description = models.TextField(null=True)
     image = models.ImageField(upload_to='app/')
+    group = models.ForeignKey(Group, on_delete=models.CASCADE, null=True)
     create_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

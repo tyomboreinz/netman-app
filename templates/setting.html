@@ -25,14 +25,16 @@
                     </thead>
                     <tbody>
                     {% for setting in configs %}
-                    <tr>
-                        <td class="text-center text-muted">{{ forloop.counter }}</td>
-                        <td class="text-center">{{ setting.config|upper  }}</td>
-                        <td class="text-center">{{ setting.value }}</td>
-                        <td class="text-center">
-                            <a href="{% url 'config_edit' setting.id%}" class="btn btn-primary btn-sm">Edit</a>
-                        </td>
-                    </tr>
+                        {% if setting.config != 'active_subnet' %}
+                            <tr>
+                                <td class="text-center text-muted">{{ forloop.counter0 }}</td>
+                                <td class="text-center">{{ setting.config|upper  }}</td>
+                                <td class="text-center">{{ setting.value }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'config_edit' setting.id%}" class="btn btn-primary btn-sm">Edit</a>
+                                </td>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
