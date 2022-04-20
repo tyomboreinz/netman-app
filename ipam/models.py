@@ -62,7 +62,7 @@ class Credential(models.Model):
     ip = models.ForeignKey(Ip_address, on_delete=models.CASCADE)
     description = models.TextField(null=True)
     username = models.CharField(max_length=30)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=100)
     owner = models.CharField(max_length=15)
 
     def __str__(self):

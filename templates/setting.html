@@ -25,7 +25,7 @@
                     </thead>
                     <tbody>
                     {% for setting in configs %}
-                        {% if setting.config != 'active_subnet' %}
+                        {% if setting.config != 'active_subnet' and setting.config != 'started_up' %}
                             <tr>
                                 <td class="text-center text-muted">{{ forloop.counter0 }}</td>
                                 <td class="text-center">{{ setting.config|upper  }}</td>

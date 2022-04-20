@@ -21,6 +21,7 @@ urlpatterns = [
     path('login/', LoginView.as_view(authentication_form=LoginForm), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
 
+    path('starting_up', starting_up, name='starting_up'),
     path('dashboard', dashboard, name='dashboard'),
     path('', home, name='home'),
 

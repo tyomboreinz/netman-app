@@ -10,6 +10,7 @@ from django.contrib import messages
 from django.conf import settings
 from ipam.models import *
 from ipam.forms import *
+from ipam.crypt import Crypt
 from django.contrib.auth import get_user_model
 import datetime, random, ipcalc, subprocess
 
@@ -250,6 +251,8 @@ def credential_edit(request, id_cred):
 def credential_add(request):
     if request.POST:
         post_value = request.POST.copy()
+        string_pass = post_value['password']
+        post_value['password'] = Crypt.encrypt_string(string_pass)
         post_value['owner'] = request.user
         form = FormCredential(post_value)
         if form.is_valid():
@@ -275,8 +278,13 @@ def credential_add(request):
 
 @login_required(login_url=settings.LOGIN_URL)
 def credentials(request):
+    list_cred = Credential.objects.filter(owner=request.user, id=46, ip__subnet__group__is_active=1).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('ip__ip_address', 'type')
+    for cred in list_cred:
+        string_pass = cred['password']
+        cred['password'] = Crypt.decrypt_string(string_pass)
     data = {
-        'cred_list' : Credential.objects.filter(owner=request.user, ip__subnet__group__is_active=1).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('ip__ip_address', 'type'),
+        # 'cred_list' : Credential.objects.filter(owner=request.user, ip__subnet__group__is_active=1).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('ip__ip_address', 'type'),
+        'cred_list' : list_cred,
         'menu_cred' : 'class=mm-active',
         'active_group' : Group.objects.get(is_active=1),
         'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
@@ -479,3 +487,11 @@ def home(request):
         'year' : now.year
     }
     return render(request, 'portal.html', data)
+
+def starting_up(request):
+    start = ConfigPortal.objects.get(config='started_up')
+    if str(start) == '0':
+        Crypt.generate_key()
+        ConfigPortal.objects.filter(config='started_up').update(value=1)
+
+    return redirect('/dashboard')
