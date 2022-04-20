@@ -8,5 +8,14 @@
     {"model": "ipam.configportal", "pk": 7, "fields": {"config": "company_website", "value": "https://marvels.co.id"}},
     {"model": "ipam.configportal", "pk": 8, "fields": {"config": "active_subnet", "value": "1"}},
     {"model": "ipam.configportal", "pk": 9, "fields": {"config": "started_up", "value": "0"}},
-    {"model": "ipam.group", "pk": 1, "fields": {"name": "Main Group", "description": "First Group", "is_active": "1"}}
+    {"model": "ipam.group", "pk": 1, "fields": {"name": "Main Group", "description": "First Group", "is_active": "1"}},
+    {"model": "ipam.os", "pk": 1, "fields": {"name": "Ubuntu Server 20.04"}},
+    {"model": "ipam.os", "pk": 2, "fields": {"name": "Debian 11"}},
+    {"model": "ipam.os", "pk": 3, "fields": {"name": "Centos 8"}},
+    {"model": "ipam.os", "pk": 4, "fields": {"name": "Centos 7"}},
+    {"model": "ipam.os", "pk": 5, "fields": {"name": "VMWare Esxi"}},
+    {"model": "ipam.os", "pk": 6, "fields": {"name": "VMWare VCenter"}},
+    {"model": "ipam.os", "pk": 7, "fields": {"name": "Mikrotik"}},
+    {"model": "ipam.os", "pk": 8, "fields": {"name": "OpenSUSE"}},
+    {"model": "ipam.os", "pk": 9, "fields": {"name": "Windows Server"}}
 ]
