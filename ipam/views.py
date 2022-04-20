@@ -1,4 +1,3 @@
-from ipaddress import ip_address
 from django.db.models.aggregates import Count
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -239,6 +238,13 @@ def credential_edit(request, id_cred):
             return redirect('credentials')
     else:
         form = FormCredential(instance=cred)
+        ips = Ip_address.objects.filter(subnet__group__is_active=1).values('id', 'ip_address').order_by(Length('ip_address').asc(), 'ip_address')
+        list_choices = ()
+        for ip in ips:
+            address = (str(ip['id']), ip['ip_address'])
+            list_choices += (address,)
+        form.fields['ip'].choices = list_choices
+        form.fields['owner'].widget = forms.HiddenInput()
         data = {
             'form' : form,
             'title' : 'Edit Credential',
@@ -278,12 +284,11 @@ def credential_add(request):
 
 @login_required(login_url=settings.LOGIN_URL)
 def credentials(request):
-    list_cred = Credential.objects.filter(owner=request.user, id=46, ip__subnet__group__is_active=1).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('ip__ip_address', 'type')
+    list_cred = Credential.objects.filter(owner=request.user, ip__subnet__group__is_active=1).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('ip__ip_address', 'type')
     for cred in list_cred:
         string_pass = cred['password']
         cred['password'] = Crypt.decrypt_string(string_pass)
     data = {
-        # 'cred_list' : Credential.objects.filter(owner=request.user, ip__subnet__group__is_active=1).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('ip__ip_address', 'type'),
         'cred_list' : list_cred,
         'menu_cred' : 'class=mm-active',
         'active_group' : Group.objects.get(is_active=1),

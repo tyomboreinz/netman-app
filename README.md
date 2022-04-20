@@ -15,7 +15,7 @@ Python 3.9.5
 Install some requirement for Python using pip
 
 ```bash
-pip install -r requirement.txt
+pip3 install -r requirement.txt
 ```
 
 Migrate model to database
@@ -46,4 +46,8 @@ python3 manage.py runserver 0.0.0.0:8080
 ## Feature
 
 - IP Address Management
-- Portal APP Management
+- APP Management
+- Credential Management
+- Group Management
+- Portal App
+- Ping Scan Ip Address using Nmap
