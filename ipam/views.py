@@ -496,6 +496,7 @@ def dashboard(request):
     }
     return render(request, 'dashboard.html', data)
 
+@login_required(login_url=settings.LOGIN_URL)
 def home(request):
     now = datetime.datetime.now()
     data = {
@@ -511,6 +512,7 @@ def home(request):
     }
     return render(request, 'portal.html', data)
 
+@login_required(login_url=settings.LOGIN_URL)
 def starting_up(request):
     start = ConfigPortal.objects.get(config='started_up')
     if str(start) == '0':
