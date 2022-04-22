@@ -60,10 +60,12 @@
     </div>
     <footer class="main-footer">
       <div class="pull-right hidden-xs">
-        <a target="_blank" href="{% url 'login' %}">
-        <b>Login</b> 
-        </a>
-        to manage this application
+        {% if user.is_authenticated %} 
+          Go to <a target="_blank" href="{% url 'dashboard' %}"><b>dashboard</b></a> to manage this application 
+        {% else %} 
+          <a target="_blank" href="{% url 'login' %}"><b>Login</b></a> to manage this application 
+        {% endif %}
+        
       </div>
       <strong>Copyright &copy; {{ year }} <a href="{{ company_website }}" target="blank">{{ company_short_name }}</a></strong>
     </footer>

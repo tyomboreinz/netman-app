@@ -174,6 +174,12 @@ def application_edit(request, id_app):
             return redirect('applications')
     else:
         form = FormApplication(instance=app)
+        ips = Ip_address.objects.filter(subnet__group__is_active=1).values('id', 'ip_address').order_by(Length('ip_address').asc(), 'ip_address')
+        list_choices = ()
+        for ip in ips:
+            address = (str(ip['id']), ip['ip_address'])
+            list_choices += (address,)
+        form.fields['ip'].choices = list_choices
         data = {
             'form' : form,
             'title' : 'Edit App',
@@ -229,8 +235,13 @@ def credential_delete(request, id_cred):
 @login_required(login_url=settings.LOGIN_URL)
 def credential_edit(request, id_cred):
     cred = Credential.objects.get(id=id_cred)
+    string_pass = cred.password
+    cred.password = Crypt.decrypt_string(string_pass)
+
     if request.POST:
         post_value = request.POST.copy()
+        string_pass = post_value['password']
+        post_value['password'] = Crypt.encrypt_string(string_pass)
         post_value['owner'] = request.user
         form = FormCredential(post_value, instance=cred)
         if form.is_valid():
@@ -313,11 +324,18 @@ def ip_edit(request, id_ip):
             return redirect('/network/' + str(subnet.id))
     else:
         form = FormIpAddress(instance=ip)
+        ips = Subnet.objects.filter(group__is_active=1).values('id', 'ip_network', 'description').order_by(Length('ip_network').asc(), 'ip_network')
+        list_choices = ()
+        for ip in ips:
+            address = (str(ip['id']), ip['ip_network'] +" - "+ ip['description'])
+            list_choices += (address,)
+        form.fields['subnet'].choices = list_choices
         data = {
             'form' : form,
             'ip' : ip,
             'title' : 'Edit IP Address',
             'active_group' : Group.objects.get(is_active=1),
+            'active_subnet' : ConfigPortal.objects.get(config="active_subnet"),
             'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-edit.html', data)
