@@ -35,39 +35,29 @@
         <table style="width: 100%;" id="example" class="table table-hover table-striped table-bordered">
             <thead>
             <tr>
-                <th>#</th>
-                <th>IP Address</th>
-                <th>Hostname</th>
-                <th>Operating System</th>
-                <th>Description</th>
-                <th>Action</th>
+                <th class="text-center">#</th>
+                <th class="text-center">IP Address</th>
+                <th class="text-center">Hostname</th>
+                <th class="text-center">Operating System</th>
+                <th class="text-center">Description</th>
+                <th class="text-center">Action</th>
             </tr>
             </thead>
             <tbody>
                 {% for ip in ips %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ ip.ip_address }}</td>
-                    <td>{{ ip.hostname }}</td>
-                    <td>{{ ip.os }}</td>
-                    <td>{{ ip.description }}</td>
-                    <td>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td class="text-center">{{ ip.ip_address }}</td>
+                    <td class="text-center">{{ ip.hostname }}</td>
+                    <td class="text-center">{{ ip.os }}</td>
+                    <td class="text-center">{{ ip.description }}</td>
+                    <td class="text-center">
                         <a href="{% url 'ip_edit' ip.id%}"><i class="fas fa-pencil-alt"></i></a>&nbsp;&nbsp;
                         <a href="#" data-toggle="modal" data-target="#delete-ip-{{ ip.id }}"><i class="fas fa-trash-alt"></i></a></td>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
-            <tfoot>
-                <tr>
-                    <th>#</th>
-                    <th>IP Address</th>
-                    <th>Hostname</th>
-                    <th>Operating System</th>
-                    <th>Description</th>
-                    <th>Action</th>
-                </tr>
-            </tfoot>
         </table>
     </div>
 </div>

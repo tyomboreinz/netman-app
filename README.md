@@ -8,7 +8,7 @@ Ubuntu / Debian
 
 Package **nmap** already installed
 
-Python 3.9.5
+Python 3
 
 ## Installation
 
@@ -28,7 +28,7 @@ python3 manage.py migrate
 Then insert default configuration of Portal
 
 ```bash
-python3 manage.py loaddata data/ConfigPortal.json
+python3 manage.py loaddata data/data.json
 ```
 
 insert user dan password

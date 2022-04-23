@@ -27,7 +27,7 @@ class FormSubnet(ModelForm):
         fields = '__all__'
 
         netmask = ()
-        for i in range(16, 32):
+        for i in range(0, 32):
             net = (str(i), str(i))
             netmask += (net,)
 

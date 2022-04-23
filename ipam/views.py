@@ -219,7 +219,7 @@ def applications(request):
     data = {
         'active_group' : Group.objects.get(is_active=1),
         # 'app_list' : Application.objects.filter(ip__subnet__group__is_active=1),
-        'app_list' : Application.objects.filter(group__is_active=1),
+        'app_list' : Application.objects.filter(group__is_active=1).order_by('name'),
         'menu_app' : 'class=mm-active',
         'active_group' : Group.objects.get(is_active=1),
         'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
@@ -295,7 +295,7 @@ def credential_add(request):
 
 @login_required(login_url=settings.LOGIN_URL)
 def credentials(request):
-    list_cred = Credential.objects.filter(owner=request.user, ip__subnet__group__is_active=1).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('ip__ip_address', 'type')
+    list_cred = Credential.objects.filter(owner=request.user, ip__subnet__group__is_active=1).values('id','type','ip__ip_address','username','password','description','ip__hostname').order_by('type', 'ip__ip_address')
     for cred in list_cred:
         string_pass = cred['password']
         cred['password'] = Crypt.decrypt_string(string_pass)
@@ -316,12 +316,13 @@ def ip_delete(request, id_ip):
 @login_required(login_url=settings.LOGIN_URL)
 def ip_edit(request, id_ip):
     ip = Ip_address.objects.get(id=id_ip)
+    subnet = ConfigPortal.objects.get(config="active_subnet")
     if request.POST:
         form = FormIpAddress(request.POST, instance=ip)
+        # subnet = Subnet.objects.get(ip_network=form.cleaned_data['subnet'])
         if form.is_valid():
-            subnet = Subnet.objects.get(ip_network=form.cleaned_data['subnet'])
             form.save()
-            return redirect('/network/' + str(subnet.id))
+            return redirect('/network/' + str(subnet.value))
     else:
         form = FormIpAddress(instance=ip)
         ips = Subnet.objects.filter(group__is_active=1).values('id', 'ip_network', 'description').order_by(Length('ip_network').asc(), 'ip_network')
@@ -335,31 +336,28 @@ def ip_edit(request, id_ip):
             'ip' : ip,
             'title' : 'Edit IP Address',
             'active_group' : Group.objects.get(is_active=1),
-            'active_subnet' : ConfigPortal.objects.get(config="active_subnet"),
+            'active_subnet' : subnet,
             'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
         }
     return render(request, 'item-edit.html', data)
 
 @login_required(login_url=settings.LOGIN_URL)
 def ip_add(request):
+    subnet = ConfigPortal.objects.get(config="active_subnet")
     if request.POST:
-        form = FormIpAddress(request.POST)
+        post_value = request.POST.copy()
+        post_value['subnet'] = subnet.value
+        form = FormIpAddress(post_value)
         if form.is_valid():
-            subnet = Subnet.objects.get(ip_network=form.cleaned_data['subnet'])
             form.save()
-            return redirect('/network/' + str(subnet.id))
+            return redirect('/network/' + str(subnet.value))
     else:
         form = FormIpAddress()
-        ips = Subnet.objects.filter(group__is_active=1).values('id', 'ip_network', 'description').order_by(Length('ip_network').asc(), 'ip_network')
-        list_choices = ()
-        for ip in ips:
-            address = (str(ip['id']), ip['ip_network'] +" - "+ ip['description'])
-            list_choices += (address,)
-        form.fields['subnet'].choices = list_choices
+        form.fields['subnet'].widget = forms.HiddenInput()
         data = {
             'form' : form,
             'active_group' : Group.objects.get(is_active=1),
-            'active_subnet' : ConfigPortal.objects.get(config="active_subnet"),
+            'active_subnet' : subnet,
             'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
             'title' : 'Add IP',
             'subtile' : 'Adding IP Address to manage'
@@ -387,6 +385,7 @@ def network_edit(request, id_subnet):
     else:
         form = FormSubnet(instance=subnet)
         form.fields['group'].widget = forms.HiddenInput()
+        form.fields['ip_broadcast'].widget = forms.HiddenInput()
         data = {
             'form' : form,
             'subnet' : subnet,
@@ -472,9 +471,11 @@ def network_scan(request, id_subnet):
 
 @login_required(login_url=settings.LOGIN_URL)
 def dashboard(request):
-    os = OS.objects.all().annotate(count_os=Count('ip_address')).order_by('-count_os')
-    total_ip = Ip_address.objects.all().count()
     color_list = ['#007bff', '#6610f2', '#6f42c1', '#e83e8c', '#dc3545', '#fd7e14', '#ffc107', '#28a745', '#20c997', '#17a2b8', '#6c757d', '#3f6ad8', '#6c757d', '#3ac47d', '#16aaff', '#f7b924', '#d92550', '#eee', '#343a40', '#444054', '#794c8a']
+    color_text = ['success', 'warning', 'danger', 'info']
+    
+    os = OS.objects.all().annotate(count_os=Count('ip_address')).order_by('-count_os')
+
     data_os = []
     for data in os:
         count_data = Ip_address.objects.filter(os_id=data.id).count()
@@ -485,11 +486,16 @@ def dashboard(request):
     for i in range(len(data_os)):
         data_os[i]['color'] = color[i]
 
+    data_total = []
+    data_total.append({'name': 'Group', 'total': str(Group.objects.all().count()), 'color': ''.join(random.choices(color_text))})
+    data_total.append({'name': 'Subnet', 'total': str(Subnet.objects.all().count()), 'color': ''.join(random.choices(color_text))})
+    data_total.append({'name': 'Ip Address', 'total': str(Ip_address.objects.all().count()), 'color': ''.join(random.choices(color_text))})
+    data_total.append({'name': 'Application', 'total': str(Application.objects.all().count()), 'color': ''.join(random.choices(color_text))})
+    data_total.append({'name': 'Credential', 'total': str(Credential.objects.all().count()), 'color': ''.join(random.choices(color_text))})
+    
     data = {
-        'total_subnet' : Subnet.objects.all().count(),
-        'total_ip' : total_ip,
-        'total_app' : Application.objects.all().count(),
         'data_os' : data_os,
+        'data_total' : data_total,
         'menu_dashboard' : 'class=mm-active',
         'active_group' : Group.objects.get(is_active=1),
         'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
