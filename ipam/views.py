@@ -7,6 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.conf import settings
+from httplib2 import Credentials
 from ipam.models import *
 from ipam.forms import *
 from ipam.crypt import Crypt
@@ -218,8 +219,7 @@ def application_add(request):
 def applications(request):
     data = {
         'active_group' : Group.objects.get(is_active=1),
-        # 'app_list' : Application.objects.filter(ip__subnet__group__is_active=1),
-        'app_list' : Application.objects.filter(group__is_active=1).order_by('name'),
+        'app_list' : Application.objects.filter(ip__subnet__group__is_active=1).order_by('name'),
         'menu_app' : 'class=mm-active',
         'active_group' : Group.objects.get(is_active=1),
         'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),
@@ -319,7 +319,6 @@ def ip_edit(request, id_ip):
     subnet = ConfigPortal.objects.get(config="active_subnet")
     if request.POST:
         form = FormIpAddress(request.POST, instance=ip)
-        # subnet = Subnet.objects.get(ip_network=form.cleaned_data['subnet'])
         if form.is_valid():
             form.save()
             return redirect('/network/' + str(subnet.value))
@@ -492,10 +491,20 @@ def dashboard(request):
     data_total.append({'name': 'Ip Address', 'total': str(Ip_address.objects.all().count()), 'color': ''.join(random.choices(color_text))})
     data_total.append({'name': 'Application', 'total': str(Application.objects.all().count()), 'color': ''.join(random.choices(color_text))})
     data_total.append({'name': 'Credential', 'total': str(Credential.objects.all().count()), 'color': ''.join(random.choices(color_text))})
+
+    group = Group.objects.all().order_by('name')
+    data_group = []
+    for data in group:
+        data_group.append({'group_name' : data.name, 
+                            'subnet' : str(Subnet.objects.filter(group__id=data.id).count()),
+                            'ip_address': str(Ip_address.objects.filter(subnet__group__id=data.id).count()),
+                            'application': str(Application.objects.filter(ip__subnet__group__id=data.id).count()),
+                            'credential' : str(Credential.objects.filter(ip__subnet__group__id=data.id).count())})
     
     data = {
         'data_os' : data_os,
         'data_total' : data_total,
+        'data_detail' : data_group,
         'menu_dashboard' : 'class=mm-active',
         'active_group' : Group.objects.get(is_active=1),
         'sidebar_subnets' : Subnet.objects.filter(group__is_active=1).order_by(Length('ip_network').asc(), 'ip_network'),

@@ -12,19 +12,29 @@
                 <div class="page-title-subheading">app</div>
             </div>
         </div>
+        <div class="page-title-actions">
+            <div class="d-inline-block dropdown">
+                <div tabindex="-1" role="menu" aria-hidden="true">
+                    <div class="col-sm-12 d-flex">
+                        <a href="{% url 'app_add' %}" class="btn btn-success mx-auto mx-md-0 text-white">Add App</a>&nbsp;
+                        <a href="{% url 'home' %}" target="_blank" class="btn btn-success mx-auto mx-md-0 text-white">Go to Portal</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
-            <div class="card-header">List Applications
+            <!-- <div class="card-header">List Applications
                 <div class="btn-actions-pane-right">
                     <a href="{% url 'app_add' %}" class="btn btn-success mx-auto mx-md-0 text-white">Add App</a>
                     <a href="{% url 'home' %}" target="_blank" class="btn btn-success mx-auto mx-md-0 text-white">Go to Portal</a>
                 </div>
-            </div>
+            </div> -->
             <div class="card-body">
-                <table class="align-middle mb-0 table table-borderless table-striped table-hover">
+                <table id="example" class="align-middle mb-0 table table-bordered table-striped table-hover">
                     <thead>
                     <tr>
                         <th class="text-center">#</th>

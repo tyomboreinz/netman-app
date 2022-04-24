@@ -11,19 +11,20 @@
                 <div class="page-title-subheading">This is Network</div>
             </div>
         </div>
-           
+        <div class="page-title-actions">
+            <div class="d-inline-block dropdown">
+                <div tabindex="-1" role="menu" aria-hidden="true">
+                    <div class="col-sm-12 d-flex">
+                        <a href="{% url 'network_add' %}"><button class="btn btn-success mx-auto mx-md-0 text-white">Add Network</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
-            <div class="card-header">List Network
-                <div class="btn-actions-pane-right">
-                    <a href="{% url 'network_add' %}">
-                        <button class="btn btn-success mx-auto mx-md-0 text-white">Add Network</button>
-                    </a>
-                </div>
-            </div>
             <div class="card-body">
                 <table class="align-middle mb-0 table table-borderless table-striped table-hover">
                     <thead>
@@ -54,7 +55,7 @@
                     </tbody>
                 </table>
             </div>
-            <div class="d-block text-center card-footer"></div>
+            <!-- <div class="d-block text-center card-footer"></div> -->
         </div>
     </div>
 </div>

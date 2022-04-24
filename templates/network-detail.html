@@ -49,7 +49,7 @@
                     <td class="text-center">{{ forloop.counter }}</td>
                     <td class="text-center">{{ ip.ip_address }}</td>
                     <td class="text-center">{{ ip.hostname }}</td>
-                    <td class="text-center">{{ ip.os }}</td>
+                    <td class="text-center">{% if ip.os %}{{ ip.os }}{%else%}-----{%endif%}</td>
                     <td class="text-center">{{ ip.description }}</td>
                     <td class="text-center">
                         <a href="{% url 'ip_edit' ip.id%}"><i class="fas fa-pencil-alt"></i></a>&nbsp;&nbsp;
