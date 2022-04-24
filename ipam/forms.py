@@ -92,7 +92,7 @@ class FormCredential(ModelForm):
             'type': forms.TextInput({'class':'form-control'}),
             'ip': forms.Select({'class':'multiselect-dropdown form-control'}),
             'username': forms.TextInput({'class':'form-control'}),
-            'password': forms.TextInput({'class':'form-control','data-toggle':'password'}),
+            'password': forms.PasswordInput({'class':'form-control','data-toggle':'password'}),
         }
 
 class FormGroup(ModelForm):
