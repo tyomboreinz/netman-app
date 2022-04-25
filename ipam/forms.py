@@ -1,3 +1,4 @@
+from tkinter import Widget
 from django import forms
 from django.forms import ModelForm
 from django.contrib.auth.forms import AuthenticationForm
@@ -92,7 +93,7 @@ class FormCredential(ModelForm):
             'type': forms.TextInput({'class':'form-control'}),
             'ip': forms.Select({'class':'multiselect-dropdown form-control'}),
             'username': forms.TextInput({'class':'form-control'}),
-            'password': forms.PasswordInput({'class':'form-control','data-toggle':'password'}),
+            'password': forms.PasswordInput(render_value=True,attrs={'class':'form-control','data-toggle':'password'}),
         }
 
 class FormGroup(ModelForm):
