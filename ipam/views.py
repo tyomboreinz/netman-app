@@ -7,7 +7,6 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.conf import settings
-from httplib2 import Credentials
 from ipam.models import *
 from ipam.forms import *
 from ipam.crypt import Crypt
