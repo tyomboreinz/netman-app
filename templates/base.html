@@ -343,6 +343,16 @@
                 text.style.webkitTextSecurity = "none";
             }
         }
+
+        document.getElementById('copy-username-{{ cred.id }}').onclick = function () {
+            const user = document.getElementById('cred-username-{{ cred.id }}');
+            navigator.clipboard.writeText(user.textContent);
+        }
+
+        document.getElementById('copy-password-{{ cred.id }}').onclick = function () {
+            const pass = document.getElementById('cred-password-{{ cred.id }}');
+            navigator.clipboard.writeText(pass.textContent);
+        }
     </script>
     {%endif%}
 {% endfor %}
