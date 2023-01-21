@@ -1,7 +1,7 @@
 [
     {"model": "ipam.configportal", "pk": 1, "fields": {"config": "company_name", "value": "Marvel Cinematic Universe"}}, 
     {"model": "ipam.configportal", "pk": 2, "fields": {"config": "company_short_name", "value": "MCU"}}, 
-    {"model": "ipam.configportal", "pk": 3, "fields": {"config": "company_address", "value": "Jl. Thor No.212, Antman, Kec. Captain America, Kota Hulk, Black Widow"}}, 
+    {"model": "ipam.configportal", "pk": 3, "fields": {"config": "company_address", "value": "Jl. Thor No.212, Antman, Kec. Captain America, Kota Hulk, Avenger"}}, 
     {"model": "ipam.configportal", "pk": 4, "fields": {"config": "company_email", "value": "crew@marvels.co.id"}}, 
     {"model": "ipam.configportal", "pk": 5, "fields": {"config": "company_telp", "value": "212"}}, 
     {"model": "ipam.configportal", "pk": 6, "fields": {"config": "portal_name", "value": "Netman Portal"}}, 

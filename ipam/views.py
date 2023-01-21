@@ -512,6 +512,11 @@ def dashboard(request):
 
 @login_required(login_url=settings.LOGIN_URL)
 def home(request):
+    start = ConfigPortal.objects.get(config='started_up')
+    if str(start) == '0':
+        Crypt.generate_key()
+        ConfigPortal.objects.filter(config='started_up').update(value=1)
+
     now = datetime.datetime.now()
     data = {
         'company_name' : ConfigPortal.objects.get(config='company_name'),
@@ -525,12 +530,3 @@ def home(request):
         'year' : now.year
     }
     return render(request, 'portal.html', data)
-
-@login_required(login_url=settings.LOGIN_URL)
-def starting_up(request):
-    start = ConfigPortal.objects.get(config='started_up')
-    if str(start) == '0':
-        Crypt.generate_key()
-        ConfigPortal.objects.filter(config='started_up').update(value=1)
-
-    return redirect('/dashboard')
