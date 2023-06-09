@@ -43,7 +43,9 @@
                   <b class='head-text'>{{ app.name }}</b>
                   <hr style='width:100%;margin:0px;'>
                   </hr>
-                  <span class='sub-text'>{{ app.group }}</span>
+                  <span class='sub-text'>
+                    {% if app.domain %}{{app.domain}}{% else %}{{ app.ip }}:{{ app.port }}{% endif %}
+                  </span>
                 </div>
                 <!-- <div class='clearfix'></div> -->
               </div>

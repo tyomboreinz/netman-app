@@ -526,7 +526,7 @@ def home(request):
         'company_email' : ConfigPortal.objects.get(config='company_email'),
         'company_website' : ConfigPortal.objects.get(config='company_website'),
         'app_name' : ConfigPortal.objects.get(config='portal_name'),
-        'app_list' : Application.objects.order_by('group__name','name'),
+        'app_list' : Application.objects.filter(group__is_active=1).order_by('group__name','name'),
         'year' : now.year
     }
     return render(request, 'portal.html', data)

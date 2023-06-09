@@ -89,8 +89,14 @@ class FormCredential(ModelForm):
         model = Credential
         fields = '__all__'
 
+        list_choices = (
+            ('Application', 'Application'),
+            ('Device', 'Device'),
+            ('Service', 'Service'),
+        )
+
         widgets = {
-            'type': forms.TextInput({'class':'form-control'}),
+            'type': forms.Select(choices=list_choices,attrs={'class':'form-control'}),
             'ip': forms.Select({'class':'multiselect-dropdown form-control'}),
             'username': forms.TextInput({'class':'form-control'}),
             'password': forms.PasswordInput(render_value=True,attrs={'class':'form-control','data-toggle':'password'}),
